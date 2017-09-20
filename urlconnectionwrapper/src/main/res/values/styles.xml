@@ -1,0 +1,11 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="ucw_AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/ucw_colorPrimary</item>
+        <item name="colorPrimaryDark">@color/ucw_colorPrimaryDark</item>
+        <item name="colorAccent">@color/ucw_colorAccent</item>
+    </style>
+
+</resources>
