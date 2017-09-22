@@ -1,25 +1,22 @@
-apply plugin: 'com.android.application'
+apply plugin: 'com.android.library'
 apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'com.jfrog.bintray'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.2"
-    resourcePrefix "ucw_"
+    compileSdkVersion 26
+    buildToolsVersion "26.0.0"
+
     defaultConfig {
-        applicationId "in.joye.urlconnectionwrapper"
         minSdkVersion 15
-        targetSdkVersion 25
+        targetSdkVersion 26
         versionCode 1
         versionName "1.0"
+
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
     }
     buildTypes {
         release {
-            minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-        debug {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
@@ -31,16 +28,15 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile 'com.android.support:appcompat-v7:25.3.1'
-    compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    compile 'com.google.code.gson:gson:2.7'
+    compile 'com.android.support:appcompat-v7:26.0.0-alpha1'
     testCompile 'junit:junit:4.12'
+    compile 'com.google.code.gson:gson:2.7'
 }
 
 def publishLibrary = true
 
 if (publishLibrary) {
-    version = "0.0.1"
+    version = "0.0.2"
     def siteUrl = 'https://github.com/zhichaoZhang'   // 项目的主页
     def gitUrl = 'https://github.com/zhichaoZhang/urlConnectionWrapper.git'   // Git仓库的url
     group = "in.joye"            // Maven Group ID for the artifact，一般填你唯一的包名

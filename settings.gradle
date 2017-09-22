@@ -1,1 +1,1 @@
-include ':urlconnectionwrapper'
+include ':app', ':urlconnectionwrapper'

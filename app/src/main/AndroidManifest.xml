@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="in.joye.urlconnection">
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ucw_ic_launcher"
+        android:label="@string/ucw_app_name"
+        android:roundIcon="@mipmap/ucw_ic_launcher_round"
+        android:supportsRtl="true"
+        tools:replace="android:label"
+        android:theme="@style/ucw_AppTheme">
+        <activity android:name="in.joye.urlconnection.test.MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>
