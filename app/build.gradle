@@ -7,7 +7,7 @@ android {
     resourcePrefix "ucw_"
     defaultConfig {
         applicationId 'in.joye.urlconnectionwrapper.test'
-        minSdkVersion 15
+        minSdkVersion 14
         targetSdkVersion 25
         versionCode 1
         versionName "1.0"
