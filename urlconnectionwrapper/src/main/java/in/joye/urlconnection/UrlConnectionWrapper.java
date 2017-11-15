@@ -24,6 +24,7 @@ import in.joye.urlconnection.converter.GsonConverter;
  */
 
 public class UrlConnectionWrapper {
+    private boolean isDebug = false;
     private static UrlConnectionWrapper mInstance;
     private Executor mHttpExecutor;
     private Executor mCallbackExecutor;
@@ -44,6 +45,14 @@ public class UrlConnectionWrapper {
             }
         }
         return mInstance;
+    }
+
+    public void setIsDebug(boolean isDebug) {
+        this.isDebug = isDebug;
+    }
+
+    public boolean isDebug() {
+        return isDebug;
     }
 
     public <T> Call<T> create(Request request) {

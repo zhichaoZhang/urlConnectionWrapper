@@ -13,6 +13,7 @@ import java.util.zip.GZIPInputStream;
 import in.joye.urlconnection.UrlConnectionWrapper;
 import in.joye.urlconnection.converter.ConversionException;
 import in.joye.urlconnection.converter.Converter;
+import in.joye.urlconnection.converter.StringConverter;
 import in.joye.urlconnection.mime.TypedInput;
 import in.joye.urlconnection.mime.TypedOutput;
 
@@ -23,6 +24,7 @@ import in.joye.urlconnection.mime.TypedOutput;
  */
 
 public class UrlConnectionCall<T> implements Call<T> {
+    private static final String TAG = "UrlConnectionCall";
     private static final int CHUNK_SIZE = 4096;
     private Request request;
     private boolean executed = false;
@@ -104,7 +106,7 @@ public class UrlConnectionCall<T> implements Call<T> {
         } else {
             stream = connection.getInputStream();
             String contentEncoding = connection.getContentEncoding();
-            if(contentEncoding != null && contentEncoding.equalsIgnoreCase("gzip")) {
+            if (contentEncoding != null && contentEncoding.equalsIgnoreCase("gzip")) {
                 stream = new GZIPInputStream(stream);
             }
         }
@@ -115,10 +117,18 @@ public class UrlConnectionCall<T> implements Call<T> {
     ResponseWrapper<T> convertResponse(Response response) {
         if (response == null) return null;
         int statusCode = response.getStatus();
+        if (urlConnectionWrapper.isDebug()) {
+            System.out.println(TAG + "convertResponse: body type is " + bodyType);
+        }
         if (statusCode >= 200 && statusCode < 300 && bodyType != null) {
-            Converter converter = urlConnectionWrapper.getConverter();
             try {
-                return new ResponseWrapper<>(response, (T) converter.fromBody(response.getBody(), bodyType));
+                if (bodyType.equals(String.class)) {
+                    Converter converter = new StringConverter();
+                    return new ResponseWrapper<>(response, (T) converter.fromBody(response.getBody(), bodyType));
+                } else {
+                    Converter converter = urlConnectionWrapper.getConverter();
+                    return new ResponseWrapper<>(response, (T) converter.fromBody(response.getBody(), bodyType));
+                }
             } catch (ConversionException e) {
                 e.printStackTrace();
             }
