@@ -10,6 +10,9 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 
+import in.joye.urlconnection.android.AndroidLog;
+import in.joye.urlconnection.utils.Log;
+
 /**
  * 平台差异
  * <p>
@@ -42,6 +45,8 @@ public abstract class Platform {
 
     abstract Executor defaultCallbackExecutor();
 
+    abstract Log defaultLog();
+
     private static class Android extends Platform {
 
         @Override
@@ -71,6 +76,11 @@ public abstract class Platform {
                 }
             };
         }
+
+        @Override
+        Log defaultLog() {
+            return new AndroidLog();
+        }
     }
 
     private static class Base extends Platform {
@@ -97,6 +107,16 @@ public abstract class Platform {
                 @Override
                 public void execute(@NonNull Runnable command) {
                     command.run();
+                }
+            };
+        }
+
+        @Override
+        Log defaultLog() {
+            return new Log() {
+                @Override
+                public void log(String message) {
+                    System.out.println(message);
                 }
             };
         }

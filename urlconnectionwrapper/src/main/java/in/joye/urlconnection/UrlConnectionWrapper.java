@@ -16,6 +16,7 @@ import in.joye.urlconnection.client.Request;
 import in.joye.urlconnection.client.UrlConnectionCall;
 import in.joye.urlconnection.converter.Converter;
 import in.joye.urlconnection.converter.GsonConverter;
+import in.joye.urlconnection.utils.Log;
 
 /**
  * 基于UrlConnection的网络请求封装
@@ -29,11 +30,13 @@ public class UrlConnectionWrapper {
     private Executor mHttpExecutor;
     private Executor mCallbackExecutor;
     private Converter mConverter;
+    private Log log;
 
     private UrlConnectionWrapper() {
         //默认接受服务端返回的Set-Cookie，后续请求会自动添加Cookie到请求头中。
         CookieManager cookieManager = new CookieManager(null, CookiePolicy.ACCEPT_ORIGINAL_SERVER);
         CookieHandler.setDefault(cookieManager);
+        setLog(Platform.get().defaultLog());
     }
 
     public static UrlConnectionWrapper getInstance() {
@@ -94,6 +97,16 @@ public class UrlConnectionWrapper {
             mConverter = new GsonConverter(new Gson());
         }
         return mConverter;
+    }
+
+    public Log getLog() {
+        return log;
+    }
+
+    public void setLog(Log log) {
+        if (log != null) {
+            this.log = log;
+        }
     }
 
     /**

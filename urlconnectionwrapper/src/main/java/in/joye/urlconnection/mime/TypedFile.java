@@ -20,6 +20,10 @@ public class TypedFile implements TypedOutput, TypedInput {
     private final String mimeType;
     private final File file;
 
+    public TypedFile(@NonNull File file) {
+        this("file", file);
+    }
+
     public TypedFile(@NonNull String mimeType, @NonNull File file) {
         this.mimeType = mimeType;
         this.file = file;

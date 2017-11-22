@@ -27,7 +27,7 @@ public class StringConverter implements Converter {
     }
 
     @Override
-    public Object fromBody(TypedInput body, Type type) throws ConversionException {
+    public String fromBody(TypedInput body, Type type) throws ConversionException {
         ByteArrayOutputStream bos = null;
         try {
             bos = new ByteArrayOutputStream();

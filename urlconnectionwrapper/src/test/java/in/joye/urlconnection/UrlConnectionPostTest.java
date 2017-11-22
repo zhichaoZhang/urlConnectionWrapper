@@ -33,6 +33,7 @@ public class UrlConnectionPostTest extends BaseJunitTest {
     public void setUp() throws Exception {
         super.setUp();
         urlConnectionWrapper = UrlConnectionWrapper.getInstance();
+        urlConnectionWrapper.setIsDebug(true);
         RequestBuilder requestBuilder = new RequestBuilder("https://o.qfpay.com/mchnt/user/login", HttpRequestMethod.POST, RequestType.FORM_URL_ENCODED);
         requestBuilder.addFormField("username", "15330059740");
         requestBuilder.addFormField("password", "059740");

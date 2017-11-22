@@ -37,6 +37,7 @@ public class UrlConnectionFileTest extends BaseJunitTest {
     @Override
     public void setUp() throws Exception {
         urlConnectionWrapper = UrlConnectionWrapper.getInstance();
+        urlConnectionWrapper.setIsDebug(true);
         super.setUp();
     }
 

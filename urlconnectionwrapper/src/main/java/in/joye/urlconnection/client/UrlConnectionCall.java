@@ -1,5 +1,8 @@
 package in.joye.urlconnection.client;
 
+import com.google.gson.reflect.TypeToken;
+
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Type;
@@ -16,6 +19,7 @@ import in.joye.urlconnection.converter.Converter;
 import in.joye.urlconnection.converter.StringConverter;
 import in.joye.urlconnection.mime.TypedInput;
 import in.joye.urlconnection.mime.TypedOutput;
+import in.joye.urlconnection.utils.Log;
 
 /**
  * 基于URLConnection的请求
@@ -63,6 +67,26 @@ public class UrlConnectionCall<T> implements Call<T> {
     }
 
     private void prepareRequest(HttpURLConnection connection, Request request) throws IOException {
+        if (urlConnectionWrapper.isDebug()) {
+            Log log = urlConnectionWrapper.getLog();
+            log.log("---> HTTP " + request.getMethod() + " " + request.getUrl());
+            List<Header> headers = request.getHeaders();
+            if (headers != null) {
+                for (Header header : headers) {
+                    log.log(header.getName() + " : " + header.getValue());
+                }
+            }
+            TypedOutput typedOutput = request.getBody();
+            if (typedOutput != null) {
+                boolean isFile = typedOutput.fileName() != null;
+                if (!isFile) {
+                    ByteArrayOutputStream bodyContent = new ByteArrayOutputStream();
+                    typedOutput.writeTo(bodyContent);
+                    log.log(new String(bodyContent.toByteArray()));
+                }
+            }
+            log.log("END HTTP");
+        }
         connection.setRequestMethod(request.getMethod());
         connection.setDoInput(true);
 
@@ -116,24 +140,51 @@ public class UrlConnectionCall<T> implements Call<T> {
 
     ResponseWrapper<T> convertResponse(Response response) {
         if (response == null) return null;
+        ResponseWrapper<T> responseWrapper = new ResponseWrapper<>(response, null);
         int statusCode = response.getStatus();
-        if (urlConnectionWrapper.isDebug()) {
-            System.out.println(TAG + "convertResponse: body type is " + bodyType);
-        }
+
         if (statusCode >= 200 && statusCode < 300 && bodyType != null) {
             try {
                 if (bodyType.equals(String.class)) {
                     Converter converter = new StringConverter();
-                    return new ResponseWrapper<>(response, (T) converter.fromBody(response.getBody(), bodyType));
+                    responseWrapper = new ResponseWrapper<>(response, (T) converter.fromBody(response.getBody(), bodyType));
                 } else {
                     Converter converter = urlConnectionWrapper.getConverter();
-                    return new ResponseWrapper<>(response, (T) converter.fromBody(response.getBody(), bodyType));
+                    responseWrapper = new ResponseWrapper<>(response, (T) converter.fromBody(response.getBody(), bodyType));
                 }
             } catch (ConversionException e) {
                 e.printStackTrace();
             }
         }
-        return new ResponseWrapper<>(response, null);
+
+        if (urlConnectionWrapper.isDebug()) {
+            Log log = urlConnectionWrapper.getLog();
+            log.log("<--- HTTP " + response.getStatus() + " " + response.getUrl());
+            List<Header> headers = response.getHeaders();
+            if (headers != null) {
+                for (Header header : headers) {
+                    String name = header.getName();
+                    String value = header.getValue();
+                    if (name != null && value != null) {
+                        log.log(header.getName() + " : " + header.getValue());
+                    }
+                }
+            }
+            Object body = responseWrapper.responseBody;
+            if (body != null) {
+                log.log(body.toString());
+//                StringConverter stringConverter = new StringConverter();
+//                try {
+//                    String respStr = stringConverter.fromBody(responseWrapper.getRawResponse().getBody(), new TypeToken<String>(){}.getType());
+//                    log.log(respStr);
+//                } catch (ConversionException e) {
+//                    e.printStackTrace();
+//                }
+            }
+            log.log("END HTTP");
+        }
+
+        return responseWrapper;
     }
 
     @Override
