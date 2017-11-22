@@ -26,7 +26,6 @@ public class AndroidLog implements Log {
             int end = Math.min(len, i + LOG_CHUNK_SIZE);
             logChunk(message.substring(i, end));
         }
-        android.util.Log.d(tag, message);
     }
 
     public void logChunk(String chunk) {
