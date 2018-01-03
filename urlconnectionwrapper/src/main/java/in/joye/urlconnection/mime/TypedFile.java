@@ -50,6 +50,9 @@ public class TypedFile implements TypedOutput, TypedInput {
 
     @Override
     public void writeTo(OutputStream outputStream) throws IOException {
+        if (file == null || !file.exists()) {
+            return;
+        }
         byte[] buffer = new byte[BUFFER_SIZE];
         FileInputStream inputStream = new FileInputStream(file);
         try {
