@@ -3,6 +3,7 @@ package in.joye.urlconnection.converter;
 import com.google.gson.Gson;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
@@ -38,9 +39,11 @@ public class GsonConverter implements Converter {
         if (body.mimeType() != null) {
             charset = MimeUtil.parseCharset(body.mimeType(), charset);
         }
+        InputStream is = null;
         InputStreamReader isr = null;
         try {
-            isr = new InputStreamReader(body.in(), charset);
+            is = body.in();
+            isr = new InputStreamReader(is, charset);
             return gson.fromJson(isr, type);
         }catch (IOException e) {
             throw new ConversionException(e);
@@ -49,6 +52,13 @@ public class GsonConverter implements Converter {
                 try {
                     isr.close();
                 } catch (IOException ignore) {
+                }
+            }
+            if(is != null) {
+                try {
+                    is.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
             }
         }

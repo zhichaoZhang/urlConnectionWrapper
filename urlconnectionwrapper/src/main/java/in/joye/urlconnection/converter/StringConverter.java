@@ -2,6 +2,7 @@ package in.joye.urlconnection.converter;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.lang.reflect.Type;
@@ -29,13 +30,15 @@ public class StringConverter implements Converter {
     @Override
     public String fromBody(TypedInput body, Type type) throws ConversionException {
         ByteArrayOutputStream bos = null;
+        InputStream is = null;
         try {
             bos = new ByteArrayOutputStream();
+            is = body.in();
             int bufferSize = 1024;
             byte[] buffer = new byte[bufferSize];
             int count;
-            while ((count = body.in().read(buffer, 0, bufferSize)) != -1) {
-                bos.write(buffer, 0 ,count);
+            while ((count = is.read(buffer, 0, bufferSize)) != -1) {
+                bos.write(buffer, 0, count);
             }
             return new String(bos.toByteArray(), charset);
         } catch (IOException e) {
@@ -48,12 +51,19 @@ public class StringConverter implements Converter {
                     e.printStackTrace();
                 }
             }
+            if(is != null) {
+                try {
+                    is.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 
     @Override
     public TypedOutput toBody(Object object) {
-        return new StringTypedOutput(((String)object).getBytes(), charset);
+        return new StringTypedOutput(((String) object).getBytes(), charset);
     }
 
     private static class StringTypedOutput implements TypedOutput {
