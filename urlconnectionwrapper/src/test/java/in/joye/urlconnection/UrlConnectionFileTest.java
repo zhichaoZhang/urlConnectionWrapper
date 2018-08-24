@@ -32,7 +32,7 @@ import in.joye.urlconnection.mime.TypedFile;
 public class UrlConnectionFileTest extends BaseJunitTest {
     private final String BASE_TEST_DIR = "urlconnectionwrapper/src/test/";
     UrlConnectionWrapper urlConnectionWrapper;
-    private final String mDownloadFileUrl = "http://near.m1img.com/op_upload/72/151072616844.txt";
+    private final String mDownloadFileUrl = "http://near.qfpay.com.cn/op_upload/72/151072616844.txt";
 
     @Override
     public void setUp() throws Exception {

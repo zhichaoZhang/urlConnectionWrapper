@@ -37,7 +37,7 @@ public class UrlConnectionGetTest extends BaseJunitTest {
         super.setUp();
         urlConnectionWrapper = UrlConnectionWrapper.getInstance();
         urlConnectionWrapper.setIsDebug(true);
-        RequestBuilder requestBuilder = new RequestBuilder("http://120.26.215.30:8889/client/v1/patch", HttpRequestMethod.GET, RequestType.SIMPLE);
+        RequestBuilder requestBuilder = new RequestBuilder("https://o.qfpay.com/hotfix/client/patch", HttpRequestMethod.GET, RequestType.SIMPLE);
         requestBuilder.addQueryParam("app_key", "gQq3hVbnedmZK2US");
         requestBuilder.addQueryParam("app_version_code", "4.8.4");
         requestBuilder.addQueryParam("client_patch_version_num", "0");

@@ -39,11 +39,9 @@ public class GsonConverter implements Converter {
         if (body.mimeType() != null) {
             charset = MimeUtil.parseCharset(body.mimeType(), charset);
         }
-        InputStream is = null;
         InputStreamReader isr = null;
         try {
-            is = body.in();
-            isr = new InputStreamReader(is, charset);
+            isr = new InputStreamReader(body.in(), charset);
             return gson.fromJson(isr, type);
         }catch (IOException e) {
             throw new ConversionException(e);
@@ -52,13 +50,6 @@ public class GsonConverter implements Converter {
                 try {
                     isr.close();
                 } catch (IOException ignore) {
-                }
-            }
-            if(is != null) {
-                try {
-                    is.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
                 }
             }
         }
