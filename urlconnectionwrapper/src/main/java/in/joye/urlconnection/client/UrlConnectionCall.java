@@ -1,7 +1,5 @@
 package in.joye.urlconnection.client;
 
-import com.google.gson.reflect.TypeToken;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,6 +17,7 @@ import in.joye.urlconnection.converter.Converter;
 import in.joye.urlconnection.converter.StringConverter;
 import in.joye.urlconnection.mime.TypedInput;
 import in.joye.urlconnection.mime.TypedOutput;
+import in.joye.urlconnection.utils.HttpBodyUtil;
 import in.joye.urlconnection.utils.Log;
 
 /**
@@ -138,7 +137,7 @@ public class UrlConnectionCall<T> implements Call<T> {
         return new Response(connection.getURL().toString(), status, reason, headers, responseBody);
     }
 
-    ResponseWrapper<T> convertResponse(Response response) {
+    ResponseWrapper<T> convertResponse(Response response) throws IOException{
         if (response == null) return null;
         ResponseWrapper<T> responseWrapper = new ResponseWrapper<>(response, null);
         int statusCode = response.getStatus();
@@ -155,6 +154,8 @@ public class UrlConnectionCall<T> implements Call<T> {
             } catch (ConversionException e) {
                 e.printStackTrace();
             }
+        } else {
+            responseWrapper = new ResponseWrapper<>(HttpBodyUtil.readBodyToBytesIfNecessary(response), null);
         }
 
         if (urlConnectionWrapper.isDebug()) {
